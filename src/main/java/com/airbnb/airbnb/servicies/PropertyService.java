@@ -8,6 +8,7 @@ import com.airbnb.airbnb.repositories.RepositoryProperty;
 import com.airbnb.airbnb.entities.Property;
 import com.airbnb.airbnb.enums.PropertyTypes;
 import com.airbnb.airbnb.enums.States;
+import com.airbnb.airbnb.requests.PropertyRequest;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.Id;
@@ -50,29 +51,32 @@ public class PropertyService {
     }
 
     @Transactional
-    public void updateProperty(String propertyId, String owner, List<byte[]> images, String description, double size, String address, Integer rating, String postalCode, String propertyType) throws Exception {
+    public void updateProperty(String propertyId, PropertyRequest request) throws Exception {
         System.out.println("Entrando");
         Property property = repositoryProperty.findById(propertyId)
                 .orElseThrow(() -> new IllegalArgumentException("No se pudo encontrar la propiedad con el Id " + propertyId));
-        if (owner != null) {
-            property.setOwner(owner);
+        if (request.getOwner() != null) {
+            property.setOwner(request.getOwner());
         }
-        if (description != null) {
-            property.setDescription(description);
+        if (request.getDescription() != null) {
+            property.setDescription(request.getDescription());
         }
-        if (rating != null) {
-            property.setRating(rating);
+        if (request.getRating() != null) {
+            property.setRating(request.getRating());
         }
-        if (postalCode != null) {
-            property.setPostalCode(postalCode);
+        if (request.getSize() != null) {
+            property.setSize(request.getSize());
+        }
+        if (request.getPostalCode() != null) {
+            property.setPostalCode(request.getPostalCode());
 
         }
-        if (propertyType != null) {
-            PropertyTypes type = findPropertyType(propertyType);
+        if (request.getPropertyTypes() != null) {
+            PropertyTypes type = findPropertyType(request.getPropertyTypes());
             if (type != null) {
                 property.setPropertyTypes(type);
             } else {
-                throw new IllegalArgumentException("Tipo de propiedad no valido" + propertyType);
+                throw new IllegalArgumentException("Tipo de propiedad no valido" + request.getPropertyTypes());
             }
         }
         repositoryProperty.save(property);
@@ -97,8 +101,9 @@ public class PropertyService {
     public List<Property> getAllProperties() {
         return repositoryProperty.findAll();
     }
-   public Optional <Property> getPropertyById (String id){
-     return repositoryProperty.findById(id);
-   } 
-   
+
+    public Optional<Property> getPropertyById(String id) {
+        return repositoryProperty.findById(id);
+    }
+
 }

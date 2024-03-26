@@ -19,9 +19,9 @@ public class PropertyRequest {
     private States state;
     private byte[] images;
     private String description;
-    private double size;
+    private Double size;
     private String address;
-    private int rating;
+    private Integer rating;
     private String postalCode;
-    private PropertyTypes properyTypes;
+    private String propertyTypes;
 }
