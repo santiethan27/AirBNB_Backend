@@ -47,6 +47,4 @@ public class Property {
     private String postalCode;
     @Enumerated(EnumType.STRING)
     private PropertyTypes propertyTypes;
-  
-    
 }

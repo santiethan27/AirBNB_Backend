@@ -4,18 +4,20 @@
  */
 package com.airbnb.airbnb.controllers;
 
+import com.airbnb.airbnb.entities.User;
 import com.airbnb.airbnb.requests.UserRequest;
 import com.airbnb.airbnb.servicies.UserService;
 import java.util.Collections;
-import javax.persistence.PersistenceException;
-import org.hibernate.exception.ConstraintViolationException;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -59,7 +61,7 @@ public class UserController {
     public ResponseEntity<?> loginUser(@ModelAttribute UserRequest request) {
         try {
             if (request.getEmail() == null || request.getEmail().isEmpty()
-                || request.getPassword() == null || request.getPassword().isEmpty()) {
+                    || request.getPassword() == null || request.getPassword().isEmpty()) {
                 return ResponseEntity.badRequest().body(Collections.singletonMap("error", "Falta ingresar el email o la contraseña"));
             }
             userService.loginUser(request.getEmail(), request.getPassword());
@@ -68,5 +70,40 @@ public class UserController {
             return ResponseEntity.badRequest().body(Collections.singletonMap("error", e.getMessage()));
         }
     }
-    
+
+    @PutMapping("/{userId}")
+    public ResponseEntity<?> updateUser(@PathVariable String userId, @ModelAttribute UserRequest request) {
+        try {
+            userService.updateUser(userId, request);
+            return ResponseEntity.ok("Usuario actualizado exitosamente");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Collections.singletonMap("error", e.getMessage()));
+        }
+    }
+
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<?> deleteUser(@PathVariable String userId) {
+        try {
+            userService.deleteUser(userId);
+            return ResponseEntity.ok("Usuario eliminado exitosamente");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Collections.singletonMap("error", e.getMessage()));
+        }
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<User> getUser(@PathVariable String userId) {
+        User user = userService.getUserById(userId);
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        return ResponseEntity.ok(users);
+    }
 }
