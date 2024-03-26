@@ -2,9 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.airbnb.entities;
+package com.airbnb.airbnb.entities;
 
-import com.airbnb.enums.Rol;
+import com.airbnb.airbnb.enums.Rol;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
