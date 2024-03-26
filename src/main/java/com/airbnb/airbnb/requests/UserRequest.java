@@ -10,19 +10,20 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRequest{
+public class UserRequest {
+
     private String firstName;
     private String lastName;
     private String email;
     private String password;
     private String phone;
     private String country;
+    private byte[] photo;
     private Date birthDate;
     private Rol rol;
 }

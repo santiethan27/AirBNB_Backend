@@ -4,7 +4,7 @@
  */
 package com.airbnb.airbnb.controllers;
 
-import com.airbnb.airbn.servicies.PropertyService;
+import com.airbnb.airbnb.servicies.PropertyService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public class PropertyController {
         //catch (Exception e) {
           
        // }
-
+       return "hola";
     }
 
 }

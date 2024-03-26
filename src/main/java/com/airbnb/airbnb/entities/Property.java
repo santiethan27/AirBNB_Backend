@@ -40,8 +40,8 @@ public class Property {
     private List<byte[]>images=new ArrayList<>();
     private String description;
     private double size;
-    @OneToOne(cascade=CascadeType.ALL)
-    @JoinColumn(name="address_id",referencedColumnName="id")
+    /*@OneToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name="address_id",referencedColumnName="id")*/
     private String adress;
     private int rating;
     private String postalCode;
