@@ -1,5 +1,6 @@
 package com.airbnb.airbnb.controllers;
 
+import com.airbnb.airbnb.entities.Property;
 import com.airbnb.airbnb.requests.PropertyRequest;
 import com.airbnb.airbnb.servicies.PropertyService;
 import java.io.IOException;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -60,7 +62,7 @@ public class PropertyController {
         }
     }
 
-    @PutMapping("/update-property/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> updateProperty(@PathVariable String id,@ModelAttribute PropertyRequest request)throws Exception{
          try{
              propertyService.updateProperty(id, request);
@@ -69,7 +71,7 @@ public class PropertyController {
              return ResponseEntity.badRequest().body(Collections.singletonMap("error", e.getMessage()));
          }
     }
-    @DeleteMapping("/delete-property/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteProperty(@PathVariable String id) throws Exception{
         try{
             propertyService.deleteProperty(id);
@@ -78,4 +80,10 @@ public class PropertyController {
             return ResponseEntity.badRequest().body(Collections.singletonMap("error", e.getMessage()));
         }
     }
+    /*@GetMapping("/get-all")
+    public ResponseEntity<List<Property>> getAllUsers() {
+        List<Property> properties = propertyService.getAllUsers();
+        return ResponseEntity.ok(properties);
+    }*/
+    //@GetMapping("/{id}")
 }

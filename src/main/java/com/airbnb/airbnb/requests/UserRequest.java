@@ -23,7 +23,6 @@ public class UserRequest {
     private String password;
     private String phone;
     private String country;
-    private byte[] photo;
     private Date birthDate;
     private Rol rol;
 }
