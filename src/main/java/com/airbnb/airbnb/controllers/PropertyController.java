@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +26,7 @@ public class PropertyController {
     private PropertyService propertyService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerProperty(@ModelAttribute PropertyRequest request, List<MultipartFile> images) throws Exception {
+    public ResponseEntity<?> registerProperty(@ModelAttribute PropertyRequest request) throws Exception {
 
         try {
             if (request.getOwner() == null || request.getOwner().isEmpty()
@@ -33,26 +34,26 @@ public class PropertyController {
                     || request.getRating() == null
                     || request.getPostalCode() == null || request.getPostalCode().isEmpty()
                     || request.getPropertyTypes() == null
-                    || request.getSize() == null) {
+                    || request.getSize() == null || request.getImages() == null) {
 
-                return ResponseEntity.badRequest().body(Collections.singletonMap("error", "Los datos no son correctos."));
+                return ResponseEntity.badRequest().body(Collections.singletonMap("error", request));
 
             }
+            System.out.println();
             List<byte[]> uploadedFileUrls = new ArrayList<>();
-            for (MultipartFile file : images) {
+            for (MultipartFile file : request.getImages()) {
                 try {
-                    byte[] img = file.getBytes();
-                    uploadedFileUrls.add(img);
+                    uploadedFileUrls.add(file.getBytes());
                 } catch (IOException e) {
-                    // Manejo de errores de subida
-                    e.printStackTrace();
-                    // Podrías lanzar una excepción personalizada aquí o simplemente continuar con el siguiente archivo
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar las imágenes.");
                 }
             }
+
             propertyService.createProperty(request.getOwner(), uploadedFileUrls, request.getDescription(), request.getSize(), request.getAddress(), request.getRating(), request.getPostalCode(), request.getPropertyTypes());
             return ResponseEntity.ok("Propiedad registrada exitosamente.");
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Collections.singletonMap("error", e.getMessage()));
+            System.out.println(e);
+            return ResponseEntity.badRequest().body(Collections.singletonMap("error", request));
         }
     }
 }
