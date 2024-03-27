@@ -16,6 +16,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,11 +34,14 @@ public class Property {
     @GeneratedValue(generator="uuid")
     @GenericGenerator(name="uuid",strategy="uuid2")    
     private String id;
-    private String owner;
+    @OneToOne()
+    @JoinColumn(name = "owner", referencedColumnName = "id")
+    private User owner;
     @Enumerated(EnumType.STRING)
     private States state;
     @ElementCollection
-    private List<byte[]>images=new ArrayList<>();
+    @Lob
+    private List<byte[]> images;
     private String description;
     private double size;
     /*@OneToOne(cascade=CascadeType.ALL)

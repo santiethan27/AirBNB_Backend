@@ -6,8 +6,10 @@ package com.airbnb.airbnb.servicies;
 
 import com.airbnb.airbnb.repositories.RepositoryProperty;
 import com.airbnb.airbnb.entities.Property;
+import com.airbnb.airbnb.entities.User;
 import com.airbnb.airbnb.enums.PropertyTypes;
 import com.airbnb.airbnb.enums.States;
+import com.airbnb.airbnb.repositories.UserRepository;
 import com.airbnb.airbnb.requests.PropertyRequest;
 import java.util.List;
 import java.util.Optional;
@@ -26,27 +28,37 @@ public class PropertyService {
     @Autowired
     private RepositoryProperty repositoryProperty;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Transactional
     public void createProperty(String owner, List<byte[]> images, String description, double size, String address, int rating, String postalCode, String propertyType) throws Exception {
+        try {
+            Property property = new Property();
+            Optional<User> optionalUser = userRepository.findById(owner);
+            if (optionalUser.isPresent()) {
+                property.setOwner(optionalUser.get());
+            } else {
+                throw new IllegalArgumentException("Usuario no encontrado");
+            }
+            property.setImages(images);
+            property.setDescription(description);
+            property.setSize(size);
+            property.setRating(rating);
+            property.setPostalCode(postalCode);
+            property.setState(States.ACTIVO);
+            PropertyTypes type = findPropertyType(propertyType);
+            if (type != null) {
+                property.setPropertyTypes(type);
 
-        Property property = new Property();
-        property.setOwner(owner);
-        property.setImages(images);
-        property.setDescription(description);
-        property.setSize(size);
-        property.setRating(rating);
-        property.setPostalCode(postalCode);
-        property.setState(States.ACTIVO);
-        PropertyTypes type = findPropertyType(propertyType);
-        if (type != null) {
-            property.setPropertyTypes(type);
-
-        } else {
-            //  this.deleteAddress
-            throw new IllegalArgumentException("Tipo de propiedad no valido" + propertyType);
+            } else {
+                throw new IllegalArgumentException("Tipo de propiedad no valido" + propertyType);
+            }
+            property.setAdress(address);
+            repositoryProperty.save(property);
+        } catch(Exception e){
+            System.out.println(e.getMessage());
         }
-        property.setAdress(address);
-        repositoryProperty.save(property);
 
     }
 
@@ -55,8 +67,14 @@ public class PropertyService {
         System.out.println("Entrando");
         Property property = repositoryProperty.findById(propertyId)
                 .orElseThrow(() -> new IllegalArgumentException("No se pudo encontrar la propiedad con el Id " + propertyId));
+
         if (request.getOwner() != null) {
-            property.setOwner(request.getOwner());
+            Optional<User> optionalUser = userRepository.findById(request.getOwner());
+            if (optionalUser.isPresent()) {
+                property.setOwner(optionalUser.get());
+            } else {
+                throw new IllegalArgumentException("Usuario no encontrado");
+            }
         }
         if (request.getDescription() != null) {
             property.setDescription(request.getDescription());

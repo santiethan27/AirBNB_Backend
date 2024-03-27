@@ -6,10 +6,12 @@ package com.airbnb.airbnb.requests;
 
 import com.airbnb.airbnb.enums.PropertyTypes;
 import com.airbnb.airbnb.enums.States;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 @Data
 @Builder
 @AllArgsConstructor
@@ -17,11 +19,11 @@ import lombok.NoArgsConstructor;
 public class PropertyRequest {
     private String owner;
     private States state;
-    private byte[] images;
     private String description;
     private Double size;
     private String address;
     private Integer rating;
     private String postalCode;
     private String propertyTypes;
+    private MultipartFile[] images;
 }
