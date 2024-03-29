@@ -4,7 +4,6 @@
  */
 package com.airbnb.airbnb.requests;
 
-import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,6 +25,6 @@ public class CommentRequest {
     private String property;
     private String title;
     private String description;
-    private MultipartFile[] images;
+    private List<MultipartFile> images;
     private String qualification;
 }

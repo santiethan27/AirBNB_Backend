@@ -8,6 +8,7 @@ import com.airbnb.airbnb.entities.User;
 import com.airbnb.airbnb.enums.Rol;
 import com.airbnb.airbnb.repositories.UserRepository;
 import com.airbnb.airbnb.requests.UserRequest;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -53,7 +54,7 @@ public class UserService {
         }
     }
 
-    public void updateUser(String userId, UserRequest request) {
+    public void updateUser(String userId, UserRequest request) throws IOException {
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
@@ -77,7 +78,8 @@ public class UserService {
                 user.setCountry(request.getCountry());
             }
             if (request.getPhoto() != null) {
-                user.setPhoto(request.getPhoto());
+                byte[] photo = request.getPhoto().getBytes();
+                user.setPhoto(photo);
             }
             if (request.getBirthDate() != null) {
                 user.setBirthdate(request.getBirthDate());

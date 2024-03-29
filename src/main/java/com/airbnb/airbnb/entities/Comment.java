@@ -4,7 +4,6 @@
  */
 package com.airbnb.airbnb.entities;
 
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
@@ -30,16 +29,16 @@ public class Comment {
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name="user_id", referencedColumnName="id")
-    private String user;
+    private User user;
     private String title;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name="property_id",referencedColumnName="id")
     private Property property;
     private String description;
     @ElementCollection
     @Lob
-    private List<byte[]> images;
+    private List<String> images;
     private String qualification;
 }

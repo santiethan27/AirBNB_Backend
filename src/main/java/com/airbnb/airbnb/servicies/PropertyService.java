@@ -11,11 +11,14 @@ import com.airbnb.airbnb.enums.PropertyTypes;
 import com.airbnb.airbnb.enums.States;
 import com.airbnb.airbnb.repositories.UserRepository;
 import com.airbnb.airbnb.requests.PropertyRequest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.Id;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 /**
@@ -32,7 +35,7 @@ public class PropertyService {
     private UserRepository userRepository;
 
     @Transactional
-    public void createProperty(String owner, List<byte[]> images, String description, double size, String address, int rating, String postalCode, String propertyType) throws Exception {
+    public void createProperty(String owner, List<String> images, String description, double size, String address, int rating, String postalCode, String propertyType) throws Exception {
         try {
             Property property = new Property();
             Optional<User> optionalUser = userRepository.findById(owner);
@@ -56,7 +59,7 @@ public class PropertyService {
             }
             property.setAdress(address);
             repositoryProperty.save(property);
-        } catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
@@ -115,13 +118,13 @@ public class PropertyService {
         return null;
     }
 
-    @Transactional
     public List<Property> getAllProperties() {
         return repositoryProperty.findAll();
     }
 
-    public Optional<Property> getPropertyById(String id) {
-        return repositoryProperty.findById(id);
+    public Property getPropertyById(String id) {
+        Optional<Property> optionalProperty = repositoryProperty.findById(id);
+        return optionalProperty.orElse(null);
     }
 
 }

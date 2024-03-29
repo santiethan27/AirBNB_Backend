@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @Builder
@@ -23,6 +24,7 @@ public class UserRequest {
     private String password;
     private String phone;
     private String country;
+    private MultipartFile photo;
     private Date birthDate;
     private Rol rol;
 }

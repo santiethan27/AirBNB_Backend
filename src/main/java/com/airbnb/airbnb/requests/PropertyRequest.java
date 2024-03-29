@@ -25,5 +25,5 @@ public class PropertyRequest {
     private Integer rating;
     private String postalCode;
     private String propertyTypes;
-    private MultipartFile[] images;
+    private List<MultipartFile> images;
 }

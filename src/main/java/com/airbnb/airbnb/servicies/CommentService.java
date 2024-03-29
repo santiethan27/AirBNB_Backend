@@ -9,6 +9,7 @@ import com.airbnb.airbnb.entities.Property;
 import com.airbnb.airbnb.entities.User;
 import com.airbnb.airbnb.repositories.CommentRepository;
 import com.airbnb.airbnb.repositories.RepositoryProperty;
+import com.airbnb.airbnb.repositories.UserRepository;
 import com.airbnb.airbnb.requests.CommentRequest;
 import java.util.List;
 import java.util.Optional;
@@ -27,9 +28,11 @@ public class CommentService {
     private CommentRepository repositoryComment;
     @Autowired
     private RepositoryProperty repositoryProperty;
+    @Autowired
+    private UserRepository userRepository;
 
     @Transactional
-    public void createComments(String user, String property, String title, String description, List<byte[]> images, String qualification) throws Exception {
+    public void createComments(String user, String property, String title, String description, List<String> images, String qualification) throws Exception {
 
         Comment comment = new Comment();
         Optional<Property> optionalProperty = repositoryProperty.findById(property);
@@ -38,7 +41,12 @@ public class CommentService {
         } else {
             throw new IllegalArgumentException("Propiedad  no encontrada");
         }
-        comment.setUser(user);
+        Optional<User> optionalUser = userRepository.findById(user);
+        if (optionalUser.isPresent()) {
+            comment.setUser(optionalUser.get());
+        } else {
+            throw new IllegalArgumentException("Usuario  no encontrado");
+        }
         comment.setTitle(title);
         comment.setDescription(description);
         comment.setImages(images);
@@ -55,7 +63,12 @@ public class CommentService {
                 .orElseThrow(() -> new IllegalArgumentException("No se pudo encontrar con el id" + commentId));
 
         if (request.getUser() != null) {
-            comment.setUser(request.getUser());
+            Optional<User> optionalUser = userRepository.findById(request.getUser());
+            if (optionalUser.isPresent()) {
+                comment.setUser(optionalUser.get());
+            } else {
+                throw new IllegalArgumentException("Usuario  no encontrado");
+            }
         }
         if (request.getProperty() != null) {
             Optional<Property> optionalProperty = repositoryProperty.findById(request.getProperty());
@@ -77,15 +90,17 @@ public class CommentService {
         repositoryComment.save(comment);
 
     }
-     @Transactional 
+
+    @Transactional
     public void deleteComment(String commentId) throws Exception {
         Comment comment = repositoryComment.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("No se pudo encontrar con el id" + commentId));
         repositoryComment.delete(comment);
 
     }
-       @Transactional
-    public Optional<Comment> findByProperty( String property){
-        return repositoryComment.findByProperty(property);
+
+    @Transactional
+    public List<Comment> findByPropertyId(String property) {
+        return repositoryComment.findByPropertyId(property);
     }
 }

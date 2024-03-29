@@ -30,6 +30,9 @@ public class PropertyController {
     @Autowired
     private PropertyService propertyService;
 
+    @Autowired
+    private CloudinaryController cloudinaryController;
+
     @PostMapping("/register")
     public ResponseEntity<?> registerProperty(@ModelAttribute PropertyRequest request) throws Exception {
 
@@ -44,17 +47,9 @@ public class PropertyController {
                 return ResponseEntity.badRequest().body(Collections.singletonMap("error", request));
 
             }
-            System.out.println();
-            List<byte[]> uploadedFileUrls = new ArrayList<>();
-            for (MultipartFile file : request.getImages()) {
-                try {
-                    uploadedFileUrls.add(file.getBytes());
-                } catch (IOException e) {
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar las imágenes.");
-                }
-            }
+            List<String> uploadedUrls = cloudinaryController.upload(request.getImages());
 
-            propertyService.createProperty(request.getOwner(), uploadedFileUrls, request.getDescription(), request.getSize(), request.getAddress(), request.getRating(), request.getPostalCode(), request.getPropertyTypes());
+            propertyService.createProperty(request.getOwner(), uploadedUrls, request.getDescription(), request.getSize(), request.getAddress(), request.getRating(), request.getPostalCode(), request.getPropertyTypes());
             return ResponseEntity.ok("Propiedad registrada exitosamente.");
         } catch (Exception e) {
             System.out.println(e);
@@ -63,27 +58,38 @@ public class PropertyController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateProperty(@PathVariable String id,@ModelAttribute PropertyRequest request)throws Exception{
-         try{
-             propertyService.updateProperty(id, request);
-             return ResponseEntity.ok("Propiedad actualizada con exito");
-         }catch (Exception e){
-             return ResponseEntity.badRequest().body(Collections.singletonMap("error", e.getMessage()));
-         }
-    }
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteProperty(@PathVariable String id) throws Exception{
-        try{
-            propertyService.deleteProperty(id);
-            return ResponseEntity.ok("Propiedad eliminada con exito");
-        }catch (Exception e){
+    public ResponseEntity<?> updateProperty(@PathVariable String id, @ModelAttribute PropertyRequest request) throws Exception {
+        try {
+            propertyService.updateProperty(id, request);
+            return ResponseEntity.ok("Propiedad actualizada con exito");
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(Collections.singletonMap("error", e.getMessage()));
         }
     }
-    /*@GetMapping("/get-all")
-    public ResponseEntity<List<Property>> getAllUsers() {
-        List<Property> properties = propertyService.getAllUsers();
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteProperty(@PathVariable String id) throws Exception {
+        try {
+            propertyService.deleteProperty(id);
+            return ResponseEntity.ok("Propiedad eliminada con exito");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Collections.singletonMap("error", e.getMessage()));
+        }
+    }
+
+    @GetMapping("/getall")
+    public ResponseEntity<List<Property>> getAllProperty() {
+        List<Property> properties = propertyService.getAllProperties();
         return ResponseEntity.ok(properties);
-    }*/
-    //@GetMapping("/{id}")
+    }
+
+    @GetMapping("/{propertyId}")
+    public ResponseEntity<Property> getProperty(@PathVariable String propertyId) {
+        Property property = propertyService.getPropertyById(propertyId);
+        if (property != null) {
+            return ResponseEntity.ok(property);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

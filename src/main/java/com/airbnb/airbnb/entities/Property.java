@@ -41,7 +41,7 @@ public class Property {
     private States state;
     @ElementCollection
     @Lob
-    private List<byte[]> images;
+    private List<String> images;
     private String description;
     private double size;
     /*@OneToOne(cascade=CascadeType.ALL)
