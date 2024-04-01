@@ -7,28 +7,30 @@ package com.airbnb.airbnb.entities;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  *
  * @author Usuario
  */
 @Entity
+@Table(name = "City")
 public class City {
 
     @Id
     @Column(name = "ciudad_id")
     private int ciudadID;
     
-    @Column(name = "ciudad_nombre", length = 35, nullable = false, columnDefinition = "CHAR DEFAULT ''")
+    @Column(name = "pais_nombre", length = 52, nullable = false)
     private String ciudadNombre;
     
-    @Column(name = "pais_codigo", length = 3, nullable = false, columnDefinition = "CHAR DEFAULT ''")
+    @Column(name = "pais_codigo", length = 3, nullable = false)
     private String paisCodigo;
     
-    @Column(name = "ciudad_distrito", length = 20, nullable = false, columnDefinition = "CHAR DEFAULT ''")
+    @Column(name = "ciudad_distrito", length = 20, nullable = false)
     private String ciudadDistrito;
     
-    @Column(name = "ciudad_poblacion", nullable = false, columnDefinition = "INT DEFAULT 0")
+    @Column(name = "ciudad_poblacion", nullable = false)
     private int ciudadPoblacion;
 
 
