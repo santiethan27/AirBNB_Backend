@@ -21,7 +21,7 @@ public class City {
     @Column(name = "ciudad_id")
     private int ciudadID;
     
-    @Column(name = "pais_nombre", length = 52, nullable = false)
+    @Column(name = "ciudad_nombre", length = 35, nullable = false)
     private String ciudadNombre;
     
     @Column(name = "pais_codigo", length = 3, nullable = false)
