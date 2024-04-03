@@ -21,7 +21,7 @@ public class CityService {
     @Autowired
     private CityRepository cityRepository;
         @Transactional
-    public List<City> getCities () {
-        return cityRepository.findAll();
+    public List<String[]> getCities(String countryCode) {
+        return cityRepository.getCities(countryCode);
     }
 }

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,10 +27,8 @@ public class CityController {
     @Autowired
     private CityService cityService;
     
-     @GetMapping("/city")
-    public ResponseEntity<List<City>> getAllCities() {
-        List<City> city = cityService.getCities();
-        return ResponseEntity.ok(city);
+    @GetMapping("/list/{countryCode}")
+    public List<String[]> countries(@PathVariable String countryCode) {
+        return cityService.getCities(countryCode);
     }
-
 }

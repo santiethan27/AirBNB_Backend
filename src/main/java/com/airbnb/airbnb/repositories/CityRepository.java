@@ -5,14 +5,18 @@
 package com.airbnb.airbnb.repositories;
 
 import com.airbnb.airbnb.entities.City;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author Katerine
  */
- @Repository
+@Repository
 public interface  CityRepository extends JpaRepository <City,String>{
-  
+    @Query(value = "SELECT pais_codigo, ciudad_nombre FROM city WHERE pais_codigo = :countryCode", nativeQuery = true)
+    List<String[]> getCities(@Param("countryCode") String countryCode);  
 }
