@@ -4,8 +4,10 @@
  */
 package com.airbnb.airbnb.servicies;
 
+import com.airbnb.airbnb.entities.Country;
 import com.airbnb.airbnb.entities.User;
 import com.airbnb.airbnb.enums.Rol;
+import com.airbnb.airbnb.repositories.CountryRepository;
 import com.airbnb.airbnb.repositories.UserRepository;
 import com.airbnb.airbnb.requests.UserRequest;
 import java.io.IOException;
@@ -25,9 +27,11 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private CountryRepository countryRepository;
 
     @Transactional
-    public void registerUser(String first_name, String last_name, String email, String password, String phone, String Country, byte[] photo, Date birthDate, Rol rol) throws Exception {
+    public void registerUser(String first_name, String last_name, String email, String password, String phone, String Country,  byte[] photo, Date birthDate, Rol rol) throws Exception {
         try {
             User user = new User();
             user.setFirst_name(first_name);
@@ -35,7 +39,12 @@ public class UserService {
             user.setEmail(email);
             user.setPassword(password);
             user.setPhone(phone);
-            user.setCountry(Country);
+            Optional<Country> optionalCountry = countryRepository.findById(Country);
+            if (optionalCountry.isPresent()) {
+                user.setCountry(optionalCountry.get());
+            } else {
+                throw new IllegalArgumentException("Pais no encontrado");
+            }
             user.setPhoto(photo);
             user.setBirthdate(birthDate);
             user.setRol(rol);
@@ -75,7 +84,12 @@ public class UserService {
                 user.setPhone(request.getPhone());
             }
             if (request.getCountry() != null) {
-                user.setCountry(request.getCountry());
+             Optional<Country> optionalCountry = countryRepository.findById(request.getCountry());
+            if (optionalCountry.isPresent()) {
+                user.setCountry(optionalCountry.get());
+            } else {
+                throw new IllegalArgumentException("Pais no encontrado");
+            }
             }
             if (request.getPhoto() != null) {
                 byte[] photo = request.getPhoto().getBytes();

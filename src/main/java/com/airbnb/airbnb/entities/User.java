@@ -10,7 +10,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import lombok.AllArgsConstructor;
@@ -39,10 +41,13 @@ public class User {
     private String email;
     private String password;
     private String phone;
-    private String country;
+    @OneToOne()
+    @JoinColumn (name="pais_nombre", referencedColumnName="pais_codigo")
+    private Country country;
     @Lob
     byte[] photo;
     @Temporal(TemporalType.DATE)
     Date birthdate;
     Rol rol;
+ 
 }
