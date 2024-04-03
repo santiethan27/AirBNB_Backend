@@ -4,11 +4,15 @@
  */
 package com.airbnb.airbnb.servicies;
 
+import com.airbnb.airbnb.entities.City;
+import com.airbnb.airbnb.entities.Country;
 import com.airbnb.airbnb.repositories.RepositoryProperty;
 import com.airbnb.airbnb.entities.Property;
 import com.airbnb.airbnb.entities.User;
 import com.airbnb.airbnb.enums.PropertyTypes;
 import com.airbnb.airbnb.enums.States;
+import com.airbnb.airbnb.repositories.CityRepository;
+import com.airbnb.airbnb.repositories.CountryRepository;
 import com.airbnb.airbnb.repositories.UserRepository;
 import com.airbnb.airbnb.requests.PropertyRequest;
 import java.util.ArrayList;
@@ -33,9 +37,15 @@ public class PropertyService {
 
     @Autowired
     private UserRepository userRepository;
+    
+    @Autowired
+    private CountryRepository countryRepository;
+    
+    @Autowired
+    private CityRepository cityRepository;
 
     @Transactional
-    public void createProperty(String owner, List<String> images, String description, double size, String address, int rating, String postalCode, String propertyType) throws Exception {
+    public void createProperty(String owner, List<String> images, String description, double size, String address, int rating, String postalCode, String propertyType, String Country, String City) throws Exception {
         try {
             Property property = new Property();
             Optional<User> optionalUser = userRepository.findById(owner);
@@ -58,6 +68,21 @@ public class PropertyService {
                 throw new IllegalArgumentException("Tipo de propiedad no valido" + propertyType);
             }
             property.setAdress(address);
+            
+            Optional<Country> optionalCountry = countryRepository.findById(Country);
+            if (optionalCountry.isPresent()) {
+                property.setCountry(optionalCountry.get());
+            } else {
+                throw new IllegalArgumentException("Ciudad no encontrado");
+            }
+            
+            Optional<City> optionalCity = cityRepository.findById(City);
+            if (optionalCity.isPresent()) {
+                property.setCity(optionalCity.get());
+            } else {
+                throw new IllegalArgumentException("Ciudad no encontrado");
+            }
+            
             repositoryProperty.save(property);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -90,7 +115,6 @@ public class PropertyService {
         }
         if (request.getPostalCode() != null) {
             property.setPostalCode(request.getPostalCode());
-
         }
         if (request.getPropertyTypes() != null) {
             PropertyTypes type = findPropertyType(request.getPropertyTypes());
@@ -98,6 +122,22 @@ public class PropertyService {
                 property.setPropertyTypes(type);
             } else {
                 throw new IllegalArgumentException("Tipo de propiedad no valido" + request.getPropertyTypes());
+            }
+        }
+        if (request.getCountry() != null ) {
+            Optional<Country> optionalCountry = countryRepository.findById(request.getCountry());
+            if (optionalCountry.isPresent()) {
+                property.setCountry(optionalCountry.get());
+            } else {
+                throw new IllegalArgumentException("Ciudad no encontrado");
+            }
+        }
+        if (request.getCity() != null){
+            Optional<City> optionalCity = cityRepository.findById(request.getCity());
+            if (optionalCity.isPresent()) {
+                property.setCity(optionalCity.get());
+            } else {
+                throw new IllegalArgumentException("Ciudad no encontrado");
             }
         }
         repositoryProperty.save(property);

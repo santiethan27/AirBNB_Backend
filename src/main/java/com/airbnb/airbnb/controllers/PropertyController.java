@@ -42,14 +42,16 @@ public class PropertyController {
                     || request.getRating() == null
                     || request.getPostalCode() == null || request.getPostalCode().isEmpty()
                     || request.getPropertyTypes() == null
-                    || request.getSize() == null || request.getImages() == null) {
+                    || request.getSize() == null || request.getImages() == null
+                    || request.getCountry() == null 
+                    || request.getCity() == null) {
 
                 return ResponseEntity.badRequest().body(Collections.singletonMap("error", request));
 
             }
             List<String> uploadedUrls = cloudinaryController.upload(request.getImages());
 
-            propertyService.createProperty(request.getOwner(), uploadedUrls, request.getDescription(), request.getSize(), request.getAddress(), request.getRating(), request.getPostalCode(), request.getPropertyTypes());
+            propertyService.createProperty(request.getOwner(), uploadedUrls, request.getDescription(), request.getSize(), request.getAddress(), request.getRating(), request.getPostalCode(), request.getPropertyTypes(), request.getCountry(), request.getCity());
             return ResponseEntity.ok("Propiedad registrada exitosamente.");
         } catch (Exception e) {
             System.out.println(e);

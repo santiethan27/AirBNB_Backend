@@ -51,4 +51,10 @@ public class Property {
     private String postalCode;
     @Enumerated(EnumType.STRING)
     private PropertyTypes propertyTypes;
+    @OneToOne()
+    @JoinColumn(name="pais_nombre", referencedColumnName="pais_codigo")
+    private Country country;
+    @OneToOne()
+    @JoinColumn(name="ciudad_nombre", referencedColumnName="pais_id")
+    private City city;
 }

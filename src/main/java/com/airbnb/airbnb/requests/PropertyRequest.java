@@ -4,6 +4,8 @@
  */
 package com.airbnb.airbnb.requests;
 
+import com.airbnb.airbnb.entities.City;
+import com.airbnb.airbnb.entities.Country;
 import com.airbnb.airbnb.enums.PropertyTypes;
 import com.airbnb.airbnb.enums.States;
 import java.util.List;
@@ -25,5 +27,7 @@ public class PropertyRequest {
     private Integer rating;
     private String postalCode;
     private String propertyTypes;
+    private String country;
+    private String city;
     private List<MultipartFile> images;
 }
