@@ -55,6 +55,6 @@ public class Property {
     @JoinColumn(name="pais_nombre", referencedColumnName="pais_codigo")
     private Country country;
     @OneToOne()
-    @JoinColumn(name="ciudad_nombre", referencedColumnName="pais_id")
+    @JoinColumn(name="ciudad_nombre", referencedColumnName="ciudad_id")
     private City city;
 }
