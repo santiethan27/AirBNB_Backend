@@ -29,5 +29,6 @@ public class PropertyRequest {
     private String propertyTypes;
     private String country;
     private String city;
+    private String priceTypes;
     private List<MultipartFile> images;
 }

@@ -4,6 +4,7 @@
  */
 package com.airbnb.airbnb.entities;
 
+import com.airbnb.airbnb.enums.PriceTypes;
 import com.airbnb.airbnb.enums.PropertyTypes;
 import com.airbnb.airbnb.enums.States;
 import java.util.ArrayList;
@@ -34,27 +35,42 @@ public class Property {
     @GeneratedValue(generator="uuid")
     @GenericGenerator(name="uuid",strategy="uuid2")    
     private String id;
+    
     @OneToOne()
     @JoinColumn(name = "owner", referencedColumnName = "id")
     private User owner;
+    
     @Enumerated(EnumType.STRING)
     private States state;
+    
     @ElementCollection
     @Lob
     private List<String> images;
+    
     private String description;
+    
     private double size;
+    
     /*@OneToOne(cascade=CascadeType.ALL)
     @JoinColumn(name="address_id",referencedColumnName="id")*/
+    
     private String adress;
+    
     private int rating;
+    
     private String postalCode;
+    
     @Enumerated(EnumType.STRING)
     private PropertyTypes propertyTypes;
+    
     @OneToOne()
     @JoinColumn(name="pais_nombre", referencedColumnName="pais_codigo")
     private Country country;
+    
     @OneToOne()
     @JoinColumn(name="ciudad_nombre", referencedColumnName="ciudad_id")
     private City city;
+    
+    @Enumerated(EnumType.STRING)
+    private PriceTypes priceType;
 }

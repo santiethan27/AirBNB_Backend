@@ -9,6 +9,7 @@ import com.airbnb.airbnb.entities.Country;
 import com.airbnb.airbnb.repositories.RepositoryProperty;
 import com.airbnb.airbnb.entities.Property;
 import com.airbnb.airbnb.entities.User;
+import com.airbnb.airbnb.enums.PriceTypes;
 import com.airbnb.airbnb.enums.PropertyTypes;
 import com.airbnb.airbnb.enums.States;
 import com.airbnb.airbnb.repositories.CityRepository;
@@ -45,7 +46,7 @@ public class PropertyService {
     private CityRepository cityRepository;
 
     @Transactional
-    public void createProperty(String owner, List<String> images, String description, double size, String address, int rating, String postalCode, String propertyType, String Country, String City) throws Exception {
+    public void createProperty(String owner, List<String> images, String description, double size, String address, int rating, String postalCode, String propertyType, String Country, String City, String priceType) throws Exception {
         try {
             Property property = new Property();
             Optional<User> optionalUser = userRepository.findById(owner);
@@ -73,7 +74,7 @@ public class PropertyService {
             if (optionalCountry.isPresent()) {
                 property.setCountry(optionalCountry.get());
             } else {
-                throw new IllegalArgumentException("Ciudad no encontrado");
+                throw new IllegalArgumentException("Pais no encontrado");
             }
             
             Optional<City> optionalCity = cityRepository.findById(City);
@@ -81,6 +82,12 @@ public class PropertyService {
                 property.setCity(optionalCity.get());
             } else {
                 throw new IllegalArgumentException("Ciudad no encontrado");
+            }
+            PriceTypes types = findPriceType(priceType);
+            if (types != null) {
+                property.setPriceType(types);
+            } else {
+                throw new IllegalArgumentException("Tipo de prrecio no valido" + priceType);
             }
             
             repositoryProperty.save(property);
@@ -139,6 +146,14 @@ public class PropertyService {
             } else {
                 throw new IllegalArgumentException("Ciudad no encontrado");
             }
+        }  
+        if (request.getPriceTypes() != null){
+            PriceTypes types = findPriceType(request.getPriceTypes());
+            if(types != null){
+                property.setPriceType(types);
+            } else{
+                throw new IllegalArgumentException("Tipo de precio no valido" + request.getPriceTypes());
+            }
         }
         repositoryProperty.save(property);
     }
@@ -153,6 +168,15 @@ public class PropertyService {
         for (PropertyTypes type : PropertyTypes.values()) {
             if (type.name().equalsIgnoreCase(propertyType)) {
                 return type;
+            }
+        }
+        return null;
+    }
+    
+    private PriceTypes findPriceType(String priceType){
+        for (PriceTypes types : PriceTypes.values()){
+            if(types.name().equalsIgnoreCase(priceType)){
+                return types;
             }
         }
         return null;
