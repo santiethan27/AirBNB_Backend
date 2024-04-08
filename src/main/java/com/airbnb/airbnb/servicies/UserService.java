@@ -103,8 +103,6 @@ public class UserService {
             }
 
             userRepository.save(user);
-
-            userRepository.save(user);
         } else {
             
         }
