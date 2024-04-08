@@ -56,7 +56,7 @@ public class PropertyController {
             return ResponseEntity.ok("Propiedad registrada exitosamente.");
         } catch (Exception e) {
             System.out.println(e);
-            return ResponseEntity.badRequest().body(Collections.singletonMap("error", request));
+            return ResponseEntity.badRequest().body(Collections.singletonMap("error", e.getMessage()));
         }
     }
 

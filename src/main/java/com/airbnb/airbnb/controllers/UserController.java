@@ -43,12 +43,12 @@ public class UserController {
                     || request.getPassword() == null || request.getPassword().isEmpty()
                     || request.getPhone() == null || request.getPhone().isEmpty()
                     || request.getCountry() == null || request.getCountry().isEmpty()
-                    || request.getBirthDate() == null || request.getRol() == null) {
+                    || request.getBirthDate() == null) {
                 return ResponseEntity.badRequest().body(Collections.singletonMap("error", "Los datos no son correctos."));
             }
 
             byte[] photoBytes = photo.getBytes();
-            userService.registerUser(request.getFirstName(), request.getLastName(), request.getEmail(), request.getPassword(), request.getPhone(), request.getCountry(), photoBytes, request.getBirthDate(), request.getRol());
+            userService.registerUser(request.getFirstName(), request.getLastName(), request.getEmail(), request.getPassword(), request.getPhone(), request.getCountry(), photoBytes, request.getBirthDate());
             return ResponseEntity.ok("Usuario registrado exitosamente.");
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.badRequest().body(Collections.singletonMap("error", "El correo ya esta en uso"));

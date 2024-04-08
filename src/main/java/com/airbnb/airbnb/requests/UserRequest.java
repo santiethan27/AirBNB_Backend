@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 @Data
@@ -25,6 +26,7 @@ public class UserRequest {
     private String phone;
     private String country;
     private MultipartFile photo;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private Date birthDate;
     private Rol rol;
 }

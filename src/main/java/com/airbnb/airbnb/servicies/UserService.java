@@ -31,7 +31,7 @@ public class UserService {
     private CountryRepository countryRepository;
 
     @Transactional
-    public void registerUser(String first_name, String last_name, String email, String password, String phone, String Country,  byte[] photo, Date birthDate, Rol rol) throws Exception {
+    public void registerUser(String first_name, String last_name, String email, String password, String phone, String Country,  byte[] photo, Date birthDate) throws Exception {
         try {
             User user = new User();
             user.setFirst_name(first_name);
@@ -47,7 +47,7 @@ public class UserService {
             }
             user.setPhoto(photo);
             user.setBirthdate(birthDate);
-            user.setRol(rol);
+            user.setRol(Rol.USER);
             userRepository.save(user);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
