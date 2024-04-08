@@ -46,7 +46,7 @@ public class PropertyService {
     private CityRepository cityRepository;
 
     @Transactional
-    public void createProperty(String owner, List<String> images, String description, double size, String address, int rating, String postalCode, String propertyType, String Country, String City, String priceType) throws Exception {
+    public void createProperty(String owner, List<String> images, String description, double size, String address, int rating, String postalCode, String propertyType, String Country, Integer City, String priceType) throws Exception {
         try {
             Property property = new Property();
             Optional<User> optionalUser = userRepository.findById(owner);

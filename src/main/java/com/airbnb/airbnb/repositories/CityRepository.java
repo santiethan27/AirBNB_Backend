@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
  * @author Katerine
  */
 @Repository
-public interface  CityRepository extends JpaRepository <City,String>{
+public interface  CityRepository extends JpaRepository <City, Integer>{
     @Query(value = "SELECT pais_codigo, ciudad_nombre FROM city WHERE pais_codigo = :countryCode", nativeQuery = true)
     List<String[]> getCities(@Param("countryCode") String countryCode);  
 }

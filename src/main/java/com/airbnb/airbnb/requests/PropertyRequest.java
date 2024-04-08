@@ -28,7 +28,7 @@ public class PropertyRequest {
     private String postalCode;
     private String propertyTypes;
     private String country;
-    private String city;
+    private Integer city;
     private String priceTypes;
     private List<MultipartFile> images;
 }
