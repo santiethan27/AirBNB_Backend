@@ -44,7 +44,7 @@ public class PropertyController {
                     || request.getPropertyTypes() == null
                     || request.getSize() == null || request.getImages() == null
                     || request.getCountry() == null || request.getCountry().isEmpty()
-                    || request.getCity() == null || request.getCity().isEmpty()
+                    || request.getCity() == null
                     || request.getPriceTypes() == null) {
 
                 return ResponseEntity.badRequest().body(Collections.singletonMap("error", request));
