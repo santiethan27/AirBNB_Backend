@@ -15,11 +15,12 @@ public class EmailService {
         this.emailSender = emailSender;
     }
 
-    public void sendEmail(String to, String subject, String text) {
+    public void sendEmail(String to, String subject, String text,String from) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(to);
-        message.setSubject(subject);
-        message.setText(text);
+        message.setTo("emanuelduque096@gmail.com");
+        message.setFrom("sierracardozocarlosalexis@gmail.com");
+        message.setSubject("Ay mamma");
+        message.setText("Esta es la prueba del correo");
         emailSender.send(message);
     }
 }
