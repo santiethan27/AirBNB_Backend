@@ -46,7 +46,7 @@ public class Property {
     @ElementCollection
     @Lob
     private List<String> images;
-    
+    private String title;
     private String description;
     
     private double size;

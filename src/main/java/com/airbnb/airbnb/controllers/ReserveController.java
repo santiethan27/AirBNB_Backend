@@ -1,13 +1,16 @@
 package com.airbnb.airbnb.controllers;
 
+import com.airbnb.airbnb.entities.Reserve;
 import com.airbnb.airbnb.enums.PropertyTypes;
 import com.airbnb.airbnb.requests.ReserveRequest;
 import com.airbnb.airbnb.servicies.ReserveService;
 import java.util.Collections;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,7 +32,7 @@ public class ReserveController {
             if(request.getClient() == null || request.getClient().isEmpty()
                     || request.getProperty() == null || request.getProperty().isEmpty()
                     || request.getDetail() == null || request.getDetail().isEmpty()
-                    || request.getTotal_quatity() != 0
+                    || request.getTotal_quatity() == null
                     || request.getState() == null || request.getState() == null
                     || request.getDate_reserve() == null || request.getDate_reserve() == null){
                 
@@ -40,7 +43,7 @@ public class ReserveController {
             return ResponseEntity.ok("Reserva registrado exitosamente.");
          } catch (Exception e) {
             System.out.println(e);
-            return ResponseEntity.badRequest().body(Collections.singletonMap("error", request));
+            return ResponseEntity.badRequest().body(Collections.singletonMap("error", e.getMessage()));
         }
     }
     
@@ -62,5 +65,15 @@ public class ReserveController {
         }catch (Exception e) {
             return ResponseEntity.badRequest().body(Collections.singletonMap("error", e.getMessage()));
         }
+    }
+    
+    @GetMapping("/property/{propertyId}")
+    public List<Reserve> getReservesByPropertyId(@PathVariable String propertyId) {
+        return reserveService.getReservesByPropertyId(propertyId);
+    }
+
+    @GetMapping("/client/{clientId}")
+    public List<Reserve> getReservesByClientId(@PathVariable String clientId) {
+        return reserveService.getReservesByClientId(clientId);
     }
 }
