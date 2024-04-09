@@ -6,12 +6,14 @@ package com.airbnb.airbnb.controllers;
 
 import com.airbnb.airbnb.entities.User;
 import com.airbnb.airbnb.requests.UserRequest;
+import com.airbnb.airbnb.servicies.EmailService;
 import com.airbnb.airbnb.servicies.UserService;
 import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -33,6 +35,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private EmailService emailService;//Duque
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@ModelAttribute UserRequest request, @RequestPart("photo") MultipartFile photo) {
@@ -48,8 +52,13 @@ public class UserController {
             }
 
             byte[] photoBytes = photo.getBytes();
+            
             userService.registerUser(request.getFirstName(), request.getLastName(), request.getEmail(), request.getPassword(), request.getPhone(), request.getCountry(), photoBytes, request.getBirthDate());
+            // Duque
+            this.sendEmail(request.getEmail());
+            //emailService.sendEmail(request.getEmail(), "Confirmación de cuenta", "¡Gracias por registrarte!");
             return ResponseEntity.ok("Usuario registrado exitosamente.");
+            
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.badRequest().body(Collections.singletonMap("error", "El correo ya esta en uso"));
         } catch (Exception e) {
@@ -106,4 +115,21 @@ public class UserController {
         List<User> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
+    
+    @PostMapping("/sendEmail")
+    public ResponseEntity<?> sendEmail(String email) {
+        try {
+            String to = email;
+            String subject = "Ay mamma";
+            String text = "Esta es la prueba del correo";
+            String from = "emanuelduque096@gmail.com";
+
+            emailService.sendEmail(to, subject, text, from);
+
+            return ResponseEntity.ok("Correo enviado exitosamente.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Collections.singletonMap("error", e.getMessage()));
+        }
+    }
+
 }
