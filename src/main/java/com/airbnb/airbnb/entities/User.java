@@ -5,7 +5,9 @@
 package com.airbnb.airbnb.entities;
 
 import com.airbnb.airbnb.enums.Rol;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,6 +22,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  *
@@ -30,7 +35,8 @@ import org.hibernate.annotations.GenericGenerator;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class User {
+public class User implements UserDetails {
+
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
@@ -42,12 +48,42 @@ public class User {
     private String password;
     private String phone;
     @OneToOne()
-    @JoinColumn (name="pais_nombre", referencedColumnName="pais_codigo")
+    @JoinColumn(name = "pais_nombre", referencedColumnName = "pais_codigo")
     private Country country;
     @Lob
     byte[] photo;
     @Temporal(TemporalType.DATE)
     Date birthdate;
     Rol rol;
- 
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority((rol.name())));
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
 }
