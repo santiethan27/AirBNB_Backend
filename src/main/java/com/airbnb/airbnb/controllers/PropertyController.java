@@ -45,14 +45,14 @@ public class PropertyController {
                     || request.getSize() == null || request.getImages() == null
                     || request.getCountry() == null || request.getCountry().isEmpty()
                     || request.getCity() == null
-                    || request.getPriceTypes() == null) {
+                    || request.getPriceTypes() == null || request.getTitle() == null) {
 
                 return ResponseEntity.badRequest().body(Collections.singletonMap("error", request));
 
             }
             List<String> uploadedUrls = cloudinaryController.upload(request.getImages());
 
-            propertyService.createProperty(request.getOwner(), uploadedUrls, request.getDescription(), request.getSize(), request.getAddress(), request.getRating(), request.getPostalCode(), request.getPropertyTypes(), request.getCountry(), request.getCity(), request.getPriceTypes());
+            propertyService.createProperty(request.getOwner(), uploadedUrls, request.getDescription(), request.getSize(), request.getAddress(), request.getRating(), request.getPostalCode(), request.getPropertyTypes(), request.getCountry(), request.getCity(), request.getPriceTypes(), request.getTitle());
             return ResponseEntity.ok("Propiedad registrada exitosamente.");
         } catch (Exception e) {
             System.out.println(e);

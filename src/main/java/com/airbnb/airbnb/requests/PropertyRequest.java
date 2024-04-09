@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 public class PropertyRequest {
     private String owner;
+    private String title;
     private States state;
     private String description;
     private Double size;

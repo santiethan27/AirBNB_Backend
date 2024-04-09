@@ -38,15 +38,15 @@ public class PropertyService {
 
     @Autowired
     private UserRepository userRepository;
-    
+
     @Autowired
     private CountryRepository countryRepository;
-    
+
     @Autowired
     private CityRepository cityRepository;
 
     @Transactional
-    public void createProperty(String owner, List<String> images, String description, double size, String address, int rating, String postalCode, String propertyType, String Country, Integer City, String priceType) throws Exception {
+    public void createProperty(String owner, List<String> images, String description, double size, String address, int rating, String postalCode, String propertyType, String Country, Integer City, String priceType, String title) throws Exception {
         try {
             Property property = new Property();
             Optional<User> optionalUser = userRepository.findById(owner);
@@ -56,6 +56,7 @@ public class PropertyService {
                 throw new IllegalArgumentException("Usuario no encontrado");
             }
             property.setImages(images);
+            property.setTitle(title);
             property.setDescription(description);
             property.setSize(size);
             property.setRating(rating);
@@ -69,14 +70,14 @@ public class PropertyService {
                 throw new IllegalArgumentException("Tipo de propiedad no valido" + propertyType);
             }
             property.setAdress(address);
-            
+
             Optional<Country> optionalCountry = countryRepository.findById(Country);
             if (optionalCountry.isPresent()) {
                 property.setCountry(optionalCountry.get());
             } else {
                 throw new IllegalArgumentException("Pais no encontrado");
             }
-            
+
             Optional<City> optionalCity = cityRepository.findById(City);
             if (optionalCity.isPresent()) {
                 property.setCity(optionalCity.get());
@@ -89,7 +90,7 @@ public class PropertyService {
             } else {
                 throw new IllegalArgumentException("Tipo de prrecio no valido" + priceType);
             }
-            
+
             repositoryProperty.save(property);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -111,6 +112,9 @@ public class PropertyService {
                 throw new IllegalArgumentException("Usuario no encontrado");
             }
         }
+        if (request.getTitle() != null) {
+            property.setTitle(request.getTitle());
+        }
         if (request.getDescription() != null) {
             property.setDescription(request.getDescription());
         }
@@ -131,7 +135,7 @@ public class PropertyService {
                 throw new IllegalArgumentException("Tipo de propiedad no valido" + request.getPropertyTypes());
             }
         }
-        if (request.getCountry() != null ) {
+        if (request.getCountry() != null) {
             Optional<Country> optionalCountry = countryRepository.findById(request.getCountry());
             if (optionalCountry.isPresent()) {
                 property.setCountry(optionalCountry.get());
@@ -139,19 +143,19 @@ public class PropertyService {
                 throw new IllegalArgumentException("Ciudad no encontrado");
             }
         }
-        if (request.getCity() != null){
+        if (request.getCity() != null) {
             Optional<City> optionalCity = cityRepository.findById(request.getCity());
             if (optionalCity.isPresent()) {
                 property.setCity(optionalCity.get());
             } else {
                 throw new IllegalArgumentException("Ciudad no encontrado");
             }
-        }  
-        if (request.getPriceTypes() != null){
+        }
+        if (request.getPriceTypes() != null) {
             PriceTypes types = findPriceType(request.getPriceTypes());
-            if(types != null){
+            if (types != null) {
                 property.setPriceType(types);
-            } else{
+            } else {
                 throw new IllegalArgumentException("Tipo de precio no valido" + request.getPriceTypes());
             }
         }
@@ -172,10 +176,10 @@ public class PropertyService {
         }
         return null;
     }
-    
-    private PriceTypes findPriceType(String priceType){
-        for (PriceTypes types : PriceTypes.values()){
-            if(types.name().equalsIgnoreCase(priceType)){
+
+    private PriceTypes findPriceType(String priceType) {
+        for (PriceTypes types : PriceTypes.values()) {
+            if (types.name().equalsIgnoreCase(priceType)) {
                 return types;
             }
         }
