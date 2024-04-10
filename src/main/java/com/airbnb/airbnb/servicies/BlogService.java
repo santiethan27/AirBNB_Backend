@@ -73,4 +73,10 @@ public class BlogService {
         blogRepository.delete(blog);
 
     }
+    
+    @Transactional
+    public List<Blog> getAllBlog(){
+        return blogRepository.findAll();
+    }
+    
 }

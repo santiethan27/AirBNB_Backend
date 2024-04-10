@@ -4,6 +4,7 @@
  */
 package com.airbnb.airbnb.controllers;
 
+import com.airbnb.airbnb.entities.Blog;
 import com.airbnb.airbnb.requests.BlogRequest;
 import com.airbnb.airbnb.servicies.BlogService;
 import com.airbnb.airbnb.servicies.CommentService;
@@ -12,6 +13,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,5 +52,11 @@ public class BlogController {
             System.out.println(e);
             return ResponseEntity.badRequest().body(Collections.singletonMap("error", request));
         }
+    }
+    
+    @GetMapping("/getblog")
+    public ResponseEntity<List<Blog>> getAllBlogs(){
+       List<Blog> blog = blogService.getAllBlog();
+       return ResponseEntity.ok(blog); 
     }
 }
