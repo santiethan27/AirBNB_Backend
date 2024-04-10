@@ -8,6 +8,7 @@ import com.airbnb.airbnb.entities.City;
 import com.airbnb.airbnb.entities.Country;
 import com.airbnb.airbnb.enums.PropertyTypes;
 import com.airbnb.airbnb.enums.States;
+import java.math.BigDecimal;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,4 +33,5 @@ public class PropertyRequest {
     private Integer city;
     private String priceTypes;
     private List<MultipartFile> images;
+    private BigDecimal price;
 }

@@ -43,4 +43,16 @@ public class CloudinaryController {
         }
         return uploadedFileUrls;
     }
+
+    @PostMapping("/upload-single")
+    public @ResponseBody
+    String uploadSingle(@RequestParam("file") MultipartFile file) {
+        String uploadedUrl = new String();
+        try {
+            uploadedUrl = cloudinaryService.upload(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return uploadedUrl;
+    }
 }

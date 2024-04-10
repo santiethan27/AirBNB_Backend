@@ -1,4 +1,3 @@
-
 package com.airbnb.airbnb.controllers;
 
 import com.airbnb.airbnb.entities.Favorite;
@@ -20,10 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/favorite")
 public class FavoriteController {
-    
-        @Autowired
-        FavoriteService favoriteService;
-        
+
+    @Autowired
+    FavoriteService favoriteService;
+
     @PostMapping("/create_favorite")
     public ResponseEntity<?> registerFavorite(@ModelAttribute FavoriteRequest request) throws Exception {
         try {
@@ -32,14 +31,14 @@ public class FavoriteController {
                     || request.getProperty() == null || request.getProperty().isEmpty()) {
                 return ResponseEntity.badRequest().body(Collections.singletonMap("error", request));
             }
-            favoriteService.creaateFavorite(request.getUser(), request.getProperty());
+            favoriteService.createFavorite(request.getUser(), request.getProperty());
             return ResponseEntity.ok("Servicio registrado exitosamente.");
         } catch (Exception e) {
             System.out.println(e);
             return ResponseEntity.badRequest().body(Collections.singletonMap("error", request));
         }
     }
-    
+
     @PutMapping("/{id}")
     public ResponseEntity<?> updateUser(@PathVariable String id, @ModelAttribute FavoriteRequest request) {
         try {
@@ -49,8 +48,8 @@ public class FavoriteController {
             return ResponseEntity.badRequest().body(Collections.singletonMap("error", e.getMessage()));
         }
     }
-    
-     @DeleteMapping("/{favoriteId}")
+
+    @DeleteMapping("/{favoriteId}")
     public ResponseEntity<?> deleteUser(@PathVariable String favoriteId) {
         try {
             favoriteService.deleteFavorite(favoriteId);
@@ -59,10 +58,10 @@ public class FavoriteController {
             return ResponseEntity.badRequest().body(Collections.singletonMap("error", e.getMessage()));
         }
     }
-    
-    @GetMapping("/allfavo")
-    public ResponseEntity<List<Favorite>> getAllFavorite() {
-        List<Favorite> favorite = favoriteService.getAllFavorite();
-        return ResponseEntity.ok(favorite);
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<Favorite>> getFavoritesByUserId(@PathVariable String userId) {
+        List<Favorite> favorites = favoriteService.getFavoritesByUserId(userId);
+        return ResponseEntity.ok(favorites);
     }
 }

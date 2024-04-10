@@ -16,6 +16,7 @@ import com.airbnb.airbnb.repositories.CityRepository;
 import com.airbnb.airbnb.repositories.CountryRepository;
 import com.airbnb.airbnb.repositories.UserRepository;
 import com.airbnb.airbnb.requests.PropertyRequest;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -46,7 +47,7 @@ public class PropertyService {
     private CityRepository cityRepository;
 
     @Transactional
-    public void createProperty(String owner, List<String> images, String description, double size, String address, int rating, String postalCode, String propertyType, String Country, Integer City, String priceType, String title) throws Exception {
+    public void createProperty(String owner, List<String> images, String description, double size, String address, int rating, String postalCode, String propertyType, String Country, Integer City, String priceType, String title, BigDecimal price) throws Exception {
         try {
             Property property = new Property();
             Optional<User> optionalUser = userRepository.findById(owner);
@@ -62,6 +63,7 @@ public class PropertyService {
             property.setRating(rating);
             property.setPostalCode(postalCode);
             property.setState(States.ACTIVO);
+            property.setPrice(price);
             PropertyTypes type = findPropertyType(propertyType);
             if (type != null) {
                 property.setPropertyTypes(type);
@@ -126,6 +128,9 @@ public class PropertyService {
         }
         if (request.getPostalCode() != null) {
             property.setPostalCode(request.getPostalCode());
+        }
+        if (request.getPrice() != null) {
+            property.setPrice(request.getPrice());
         }
         if (request.getPropertyTypes() != null) {
             PropertyTypes type = findPropertyType(request.getPropertyTypes());
