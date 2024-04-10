@@ -7,6 +7,7 @@ package com.airbnb.airbnb.controllers;
 import com.airbnb.airbnb.auth.AuthResponse;
 import com.airbnb.airbnb.entities.User;
 import com.airbnb.airbnb.requests.UserRequest;
+import com.airbnb.airbnb.servicies.EmailServiceImpl;
 
 import com.airbnb.airbnb.servicies.UserService;
 import java.util.Collections;
@@ -40,6 +41,9 @@ public class UserController {
     @Autowired
     private UserService userService;
    
+    //duque
+    @Autowired
+    private EmailServiceImpl emailService; 
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@ModelAttribute UserRequest request, @RequestPart("photo") MultipartFile photo) {
@@ -55,10 +59,18 @@ public class UserController {
             }
 
             byte[] photoBytes = photo.getBytes();
+            
+            //Duque
+            AuthResponse authResponse = userService.registerUser(request.getFirstName(), request.getLastName(), request.getEmail(), request.getPassword(), request.getPhone(), request.getCountry(), photoBytes, request.getBirthDate());
 
-            userService.registerUser(request.getFirstName(), request.getLastName(), request.getEmail(), request.getPassword(), request.getPhone(), request.getCountry(), photoBytes, request.getBirthDate());
-            return ResponseEntity.ok("Usuario registrado exitosamente.");
+            String subject = "¡Bienvenido a nuestro sitio!";
+            String message = "¡Hola " + request.getFirstName() + " " + request.getLastName() + "!\n\nBienvenido a nuestro sitio. Gracias por registrarte.";
+            String[] toUser = {request.getEmail()};
+            emailService.sendEmail(toUser, subject, message);
 
+            return ResponseEntity.ok(authResponse);
+            //Duque
+            
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.badRequest().body(Collections.singletonMap("error", "El correo ya esta en uso"));
         } catch (Exception e) {
