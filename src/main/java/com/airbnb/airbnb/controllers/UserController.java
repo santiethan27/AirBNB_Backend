@@ -57,11 +57,11 @@ public class UserController {
 
             byte[] photoBytes = photo.getBytes();
 
-            userService.registerUser(request.getFirstName(), request.getLastName(), request.getEmail(), request.getPassword(), request.getPhone(), request.getCountry(), photoBytes, request.getBirthDate());
+            AuthResponse response = userService.registerUser(request.getFirstName(), request.getLastName(), request.getEmail(), request.getPassword(), request.getPhone(), request.getCountry(), photoBytes, request.getBirthDate());
             // Duque
             this.sendEmail(request.getEmail());
             //emailService.sendEmail(request.getEmail(), "Confirmación de cuenta", "¡Gracias por registrarte!");
-            return ResponseEntity.ok("Usuario registrado exitosamente.");
+            return ResponseEntity.ok(response);
 
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.badRequest().body(Collections.singletonMap("error", "El correo ya esta en uso"));
@@ -77,8 +77,8 @@ public class UserController {
                     || request.getPassword() == null || request.getPassword().isEmpty()) {
                 return ResponseEntity.badRequest().body(Collections.singletonMap("error", "Falta ingresar el email o la contraseña"));
             }
-            userService.loginUser(request.getEmail(), request.getPassword());
-            return ResponseEntity.ok("Ingresado");
+            AuthResponse response = userService.loginUser(request.getEmail(), request.getPassword());
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Collections.singletonMap("error", e.getMessage()));
         }
