@@ -7,6 +7,7 @@ package com.airbnb.airbnb.entities;
 import com.airbnb.airbnb.enums.PriceTypes;
 import com.airbnb.airbnb.enums.PropertyTypes;
 import com.airbnb.airbnb.enums.States;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -73,4 +74,6 @@ public class Property {
     
     @Enumerated(EnumType.STRING)
     private PriceTypes priceType;
+    
+    private BigDecimal price;
 }
