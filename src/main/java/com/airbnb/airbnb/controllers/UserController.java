@@ -6,6 +6,7 @@ package com.airbnb.airbnb.controllers;
 
 import com.airbnb.airbnb.auth.AuthResponse;
 import com.airbnb.airbnb.entities.User;
+import com.airbnb.airbnb.requests.ForgotPasswordRequest;
 import com.airbnb.airbnb.requests.UserRequest;
 import com.airbnb.airbnb.servicies.EmailServiceImpl;
 
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -40,10 +42,10 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-   
+
     //duque
     @Autowired
-    private EmailServiceImpl emailService; 
+    private EmailServiceImpl emailService;
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@ModelAttribute UserRequest request, @RequestPart("photo") MultipartFile photo) {
@@ -59,7 +61,7 @@ public class UserController {
             }
 
             byte[] photoBytes = photo.getBytes();
-            
+
             AuthResponse response = userService.registerUser(request.getFirstName(), request.getLastName(), request.getEmail(), request.getPassword(), request.getPhone(), request.getCountry(), photoBytes, request.getBirthDate());
 
             String subject = "¡Bienvenido a nuestro sitio!";
@@ -68,7 +70,7 @@ public class UserController {
             emailService.sendEmail(toUser, subject, message);
 
             return ResponseEntity.ok(response);
-            
+
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.badRequest().body(Collections.singletonMap("error", "El correo ya esta en uso"));
         } catch (Exception e) {
@@ -89,6 +91,21 @@ public class UserController {
             return ResponseEntity.badRequest().body(Collections.singletonMap("error", e.getMessage()));
         }
     }
+
+    //DUQUE
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordRequest request) {
+        try {
+            if (request.getEmail() == null || request.getEmail().isEmpty()) {
+                return ResponseEntity.badRequest().body(Collections.singletonMap("error", "Falta ingresar el email"));
+            }
+
+            emailService.sendPasswordResetEmail(request.getEmail());
+            return ResponseEntity.ok(Collections.singletonMap("message", "Se ha enviado un correo electrónico con instrucciones para restablecer la contraseña."));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Collections.singletonMap("error", e.getMessage()));
+        }
+    }//DUQUE
 
     @PutMapping("/{userId}")
     public ResponseEntity<?> updateUser(@PathVariable String userId, @ModelAttribute UserRequest request) {
@@ -125,8 +142,6 @@ public class UserController {
         List<User> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
-
-  
 
     @GetMapping(value = "verify")
     public ResponseEntity<?> verify(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) {

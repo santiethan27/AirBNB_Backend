@@ -38,17 +38,25 @@ public class EmailServiceImpl implements IEmailService {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, StandardCharsets.UTF_8.name());
-            
+
             mimeMessageHelper.setFrom(emailUser);
             mimeMessageHelper.setTo(toUser);
             mimeMessageHelper.setSubject(subject);
             mimeMessageHelper.setText(message);
             mimeMessageHelper.addAttachment(file.getName(), file);
-            
+
             mailSender.send(mimeMessage);
-        } catch(MessagingException e) {
+        } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
+    }
+    
+    
+    @Override
+    public void sendPasswordResetEmail(String email) {
+        String subject = "Restablecimiento de contraseña";
+        String message = "Hemos recibido una solicitud para restablecer tu contraseña. Si no solicitaste esto, puedes ignorar este correo electrónico. Si lo solicitaste, sigue las instrucciones en este correo para restablecer tu contraseña.";
+        sendEmail(new String[]{email}, subject, message);
     }
 
 }
