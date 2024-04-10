@@ -25,6 +25,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+//duque
+import com.airbnb.airbnb.servicies.EmailServiceImpl; 
+
 /**
  *
  * @author Usuario
@@ -37,6 +40,11 @@ public class UserService {
     private UserRepository userRepository;
     @Autowired
     private CountryRepository countryRepository;
+    
+    //duque
+    @Autowired
+    private EmailServiceImpl emailService;
+    
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
@@ -60,6 +68,14 @@ public class UserService {
             user.setBirthdate(birthDate);
             user.setRol(Rol.USER);
             userRepository.save(user);
+
+            //duque
+            String subject = "¡Bienvenido a nuestro sitio!";
+            String message = "¡Hola " + first_name + " " + last_name + "!\n\nBienvenido a nuestro sitio. Gracias por registrarte.";
+            String[] toUser = {email};
+            emailService.sendEmail(toUser, subject, message);
+             //duque
+            
             return AuthResponse.builder()
                     .token(jwtService.getToken(user))
                     .user(user)
