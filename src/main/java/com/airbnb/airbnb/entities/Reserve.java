@@ -22,9 +22,10 @@ import org.hibernate.annotations.GenericGenerator;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Reserve {
+
     @Id
-    @GeneratedValue(generator="uuid")
-    @GenericGenerator(name="uuid",strategy="uuid2")    
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
     private String detail;
     private Integer total_quatity;
@@ -35,9 +36,9 @@ public class Reserve {
     @JoinColumn(name = "property", referencedColumnName = "id")
     private Property property;
     @Temporal(TemporalType.DATE)
-    Date date_reserve;
+    Date startDate;
+    @Temporal(TemporalType.DATE)
+    Date endDate;
     ReservaType state;
-    
-    
-    
+
 }

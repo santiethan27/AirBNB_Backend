@@ -26,7 +26,7 @@ public class ReserveService {
     private ReserveRepository reserveRepository;
 
     @Transactional
-    public void createReserve(String client, String property, String detail, Integer total_quantity, Date date_reserve, ReservaType state) throws Exception {
+    public void createReserve(String client, String property, String detail, Integer total_quantity, Date dateStart, Date dateEnd, ReservaType state) throws Exception {
         try {
             Reserve reserve = new Reserve();
             Optional<Property> optionalProperty = repositoryProperty.findById(property);
@@ -43,7 +43,8 @@ public class ReserveService {
             }
             reserve.setDetail(detail);
             reserve.setTotal_quatity(total_quantity);
-            reserve.setDate_reserve(date_reserve);
+            reserve.setStartDate(dateStart);
+            reserve.setEndDate(dateEnd);
             reserve.setState(state);
             reserveRepository.save(reserve);
         } catch (Exception e) {
@@ -81,8 +82,11 @@ public class ReserveService {
         if (request.getTotal_quatity() != null) {
             reserve.setTotal_quatity(request.getTotal_quatity());
         }
-        if (request.getDate_reserve() != null) {
-            reserve.setDate_reserve(request.getDate_reserve());
+        if (request.getStartDate() != null) {
+            reserve.setStartDate(request.getStartDate());
+        }
+        if (request.getEndDate() != null) {
+            reserve.setEndDate(request.getEndDate());
         }
         if (request.getState() != null) {
             reserve.setState(request.getState());

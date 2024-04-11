@@ -21,7 +21,8 @@ public class ReserveRequest {
     private String property;
     private String detail;
     private Integer total_quatity;
-    private Date date_reserve;
+    private Date startDate;
+    private Date endDate;
     private ReservaType state;
     
 }
