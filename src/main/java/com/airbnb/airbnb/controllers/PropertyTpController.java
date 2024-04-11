@@ -68,9 +68,9 @@ public class PropertyTpController {
     }
     
     @GetMapping("/all-propertytype")
-      public List<PropertyTypes> getAllPropertyType(){
-        var propertyType = propertyTpService.getAllPropertyType();
-        return propertyType;
+    public ResponseEntity<List<PropertyTypes>> getAllPropertyType() {
+        List<PropertyTypes> propertiesType = propertyTpService.getAllPropertyType();
+        return ResponseEntity.ok(propertiesType);
     }
 
 }
