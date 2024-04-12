@@ -1,7 +1,6 @@
 package com.airbnb.airbnb.controllers;
 
 import com.airbnb.airbnb.entities.Reserve;
-import com.airbnb.airbnb.enums.PropertyTypes;
 import com.airbnb.airbnb.requests.ReserveRequest;
 import com.airbnb.airbnb.servicies.ReserveService;
 import java.util.Collections;

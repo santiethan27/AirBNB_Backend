@@ -8,12 +8,13 @@ import com.airbnb.airbnb.entities.City;
 import com.airbnb.airbnb.entities.Country;
 import com.airbnb.airbnb.repositories.RepositoryProperty;
 import com.airbnb.airbnb.entities.Property;
+import com.airbnb.airbnb.entities.PropertyTypes;
 import com.airbnb.airbnb.entities.User;
 import com.airbnb.airbnb.enums.PriceTypes;
-import com.airbnb.airbnb.enums.PropertyTypes;
 import com.airbnb.airbnb.enums.States;
 import com.airbnb.airbnb.repositories.CityRepository;
 import com.airbnb.airbnb.repositories.CountryRepository;
+import com.airbnb.airbnb.repositories.PropertyTpRepository;
 import com.airbnb.airbnb.repositories.UserRepository;
 import com.airbnb.airbnb.requests.PropertyRequest;
 import java.math.BigDecimal;
@@ -46,6 +47,9 @@ public class PropertyService {
     @Autowired
     private CityRepository cityRepository;
 
+    @Autowired
+    private PropertyTpRepository propertyTpRepository;
+
     @Transactional
     public void createProperty(String owner, List<String> images, String description, double size, String address, int rating, String postalCode, String propertyType, String Country, Integer City, String priceType, String title, BigDecimal price) throws Exception {
         try {
@@ -56,6 +60,14 @@ public class PropertyService {
             } else {
                 throw new IllegalArgumentException("Usuario no encontrado");
             }
+
+            Optional<PropertyTypes> optionalType = propertyTpRepository.findById(propertyType);
+            if (optionalType.isPresent()) {
+                property.setPropertytypes(optionalType.get());
+            } else {
+                throw new IllegalArgumentException("Tipo de propiedad no encontrada");
+            }
+
             property.setImages(images);
             property.setTitle(title);
             property.setDescription(description);
@@ -64,13 +76,6 @@ public class PropertyService {
             property.setPostalCode(postalCode);
             property.setState(States.ACTIVO);
             property.setPrice(price);
-            PropertyTypes type = findPropertyType(propertyType);
-            if (type != null) {
-                property.setPropertyTypes(type);
-
-            } else {
-                throw new IllegalArgumentException("Tipo de propiedad no valido" + propertyType);
-            }
             property.setAdress(address);
 
             Optional<Country> optionalCountry = countryRepository.findById(Country);
@@ -114,6 +119,16 @@ public class PropertyService {
                 throw new IllegalArgumentException("Usuario no encontrado");
             }
         }
+
+        if (request.getPropertytypes() != null) {
+            Optional<PropertyTypes> optionalType = propertyTpRepository.findById(request.getPropertytypes());
+            if (optionalType.isPresent()) {
+                property.setPropertytypes(optionalType.get());
+            } else {
+                throw new IllegalArgumentException("Tipo de propiedad no encontrada");
+            }
+        }
+
         if (request.getTitle() != null) {
             property.setTitle(request.getTitle());
         }
@@ -131,14 +146,6 @@ public class PropertyService {
         }
         if (request.getPrice() != null) {
             property.setPrice(request.getPrice());
-        }
-        if (request.getPropertyTypes() != null) {
-            PropertyTypes type = findPropertyType(request.getPropertyTypes());
-            if (type != null) {
-                property.setPropertyTypes(type);
-            } else {
-                throw new IllegalArgumentException("Tipo de propiedad no valido" + request.getPropertyTypes());
-            }
         }
         if (request.getCountry() != null) {
             Optional<Country> optionalCountry = countryRepository.findById(request.getCountry());
@@ -171,15 +178,6 @@ public class PropertyService {
         Property property = repositoryProperty.findById(propertyId)
                 .orElseThrow(() -> new IllegalArgumentException("No se puedo encontrar el Id" + propertyId));
         repositoryProperty.delete(property);
-    }
-
-    private PropertyTypes findPropertyType(String propertyType) {
-        for (PropertyTypes type : PropertyTypes.values()) {
-            if (type.name().equalsIgnoreCase(propertyType)) {
-                return type;
-            }
-        }
-        return null;
     }
 
     private PriceTypes findPriceType(String priceType) {

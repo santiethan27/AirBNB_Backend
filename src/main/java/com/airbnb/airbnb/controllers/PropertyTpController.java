@@ -70,6 +70,7 @@ public class PropertyTpController {
     @GetMapping("/all-propertytype")
     public ResponseEntity<List<PropertyTypes>> getAllPropertyType() {
         List<PropertyTypes> propertiesType = propertyTpService.getAllPropertyType();
+        System.out.println(propertiesType);
         return ResponseEntity.ok(propertiesType);
     }
 

@@ -35,13 +35,12 @@ public class PropertyController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerProperty(@ModelAttribute PropertyRequest request) throws Exception {
-
         try {
             if (request.getOwner() == null || request.getOwner().isEmpty()
                     || request.getDescription() == null || request.getDescription().isEmpty()
                     || request.getRating() == null
                     || request.getPostalCode() == null || request.getPostalCode().isEmpty()
-                    || request.getPropertyTypes() == null
+                    || request.getPropertytypes() == null || request.getPropertytypes().isEmpty()
                     || request.getSize() == null || request.getImages() == null
                     || request.getCountry() == null || request.getCountry().isEmpty()
                     || request.getCity() == null
@@ -53,7 +52,7 @@ public class PropertyController {
             }
             List<String> uploadedUrls = cloudinaryController.upload(request.getImages());
 
-            propertyService.createProperty(request.getOwner(), uploadedUrls, request.getDescription(), request.getSize(), request.getAddress(), request.getRating(), request.getPostalCode(), request.getPropertyTypes(), request.getCountry(), request.getCity(), request.getPriceTypes(), request.getTitle(), request.getPrice());
+            propertyService.createProperty(request.getOwner(), uploadedUrls, request.getDescription(), request.getSize(), request.getAddress(), request.getRating(), request.getPostalCode(), request.getPropertytypes(), request.getCountry(), request.getCity(), request.getPriceTypes(), request.getTitle(), request.getPrice());
             return ResponseEntity.ok("Propiedad registrada exitosamente.");
         } catch (Exception e) {
             System.out.println(e);

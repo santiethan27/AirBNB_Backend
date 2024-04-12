@@ -1,6 +1,5 @@
 package com.airbnb.airbnb.entities;
 
-import com.airbnb.airbnb.enums.PropertyTypes;
 import com.airbnb.airbnb.enums.ReservaType;
 import java.util.Date;
 import javax.persistence.Entity;
