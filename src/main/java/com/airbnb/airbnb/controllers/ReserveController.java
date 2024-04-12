@@ -31,15 +31,13 @@ public class ReserveController {
         try{
             if(request.getClient() == null || request.getClient().isEmpty()
                     || request.getProperty() == null || request.getProperty().isEmpty()
-                    || request.getDetail() == null || request.getDetail().isEmpty()
                     || request.getTotal_quatity() == null
-                    || request.getState() == null || request.getState() == null
                     || request.getStartDate() == null || request.getEndDate() == null){
                 
                 return ResponseEntity.badRequest().body(Collections.singletonMap("error", request));
             }
             
-            reserveService.createReserve(request.getClient(),request.getProperty(),request.getDetail(),request.getTotal_quatity(),request.getStartDate(),request.getStartDate(),request.getState());
+            reserveService.createReserve(request.getClient(),request.getProperty(),request.getDetail(),request.getTotal_quatity(),request.getStartDate(),request.getEndDate());
             return ResponseEntity.ok("Reserva registrado exitosamente.");
          } catch (Exception e) {
             System.out.println(e);

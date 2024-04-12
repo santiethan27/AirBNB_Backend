@@ -26,7 +26,7 @@ public class ReserveService {
     private ReserveRepository reserveRepository;
 
     @Transactional
-    public void createReserve(String client, String property, String detail, Integer total_quantity, Date dateStart, Date dateEnd, ReservaType state) throws Exception {
+    public void createReserve(String client, String property, String detail, Integer total_quantity, Date dateStart, Date dateEnd) throws Exception {
         try {
             Reserve reserve = new Reserve();
             Optional<Property> optionalProperty = repositoryProperty.findById(property);
@@ -45,7 +45,7 @@ public class ReserveService {
             reserve.setTotal_quatity(total_quantity);
             reserve.setStartDate(dateStart);
             reserve.setEndDate(dateEnd);
-            reserve.setState(state);
+            reserve.setState(ReservaType.ACTIVO);
             reserveRepository.save(reserve);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
