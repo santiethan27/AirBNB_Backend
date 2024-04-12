@@ -79,4 +79,8 @@ public class BlogService {
         return blogRepository.findAll();
     }
     
+    public Blog getBlogById(String id){
+        Optional<Blog> optionalBlog = blogRepository.findById(id);
+        return optionalBlog.orElse(null);
+    }
 }

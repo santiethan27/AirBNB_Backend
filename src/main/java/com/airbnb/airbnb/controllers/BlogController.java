@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,7 +35,7 @@ public class BlogController {
     @Autowired
     private CloudinaryController cloudinaryController;
     
-    @PostMapping("register")
+    @PostMapping("/register")
     public ResponseEntity<?> registerBlog(@ModelAttribute BlogRequest request) throws Exception {
             try {
             if (request.getUser() == null || request.getUser().isEmpty()
@@ -58,5 +59,14 @@ public class BlogController {
     public ResponseEntity<List<Blog>> getAllBlogs(){
        List<Blog> blog = blogService.getAllBlog();
        return ResponseEntity.ok(blog); 
+    }
+    @GetMapping("{blogId}")
+    public ResponseEntity<Blog> getblog(@PathVariable String blogId){
+        Blog blog = blogService.getBlogById(blogId);
+        if(blog != null){
+            return ResponseEntity.ok(blog);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
